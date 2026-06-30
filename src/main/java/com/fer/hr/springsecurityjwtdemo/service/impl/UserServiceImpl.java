@@ -1,12 +1,16 @@
 package com.fer.hr.springsecurityjwtdemo.service.impl;
 
+import com.fer.hr.springsecurityjwtdemo.dto.LoginRequestDto;
 import com.fer.hr.springsecurityjwtdemo.dto.RegisterRequestDto;
 import com.fer.hr.springsecurityjwtdemo.entity.User;
 import com.fer.hr.springsecurityjwtdemo.enums.Role;
-import com.fer.hr.springsecurityjwtdemo.exception.UsernameAlreadyExistsException;
+import com.fer.hr.springsecurityjwtdemo.exception.UsernameTakenException;
 import com.fer.hr.springsecurityjwtdemo.repository.UserRepository;
 import com.fer.hr.springsecurityjwtdemo.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -17,10 +21,12 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
 
+    private final AuthenticationManager authenticationManager;
+
     @Override
     public User register(RegisterRequestDto request) {
         if (userRepository.existsByUsername(request.username())) {
-            throw new UsernameAlreadyExistsException();
+            throw new UsernameTakenException();
         }
         User user = User.builder().
                 username(request.username()).
@@ -29,5 +35,14 @@ public class UserServiceImpl implements UserService {
                 build();
 
         return userRepository.save(user);
+    }
+
+    @Override
+    public User login(LoginRequestDto request) {
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(request.username(), request.password())
+        );
+        return userRepository.findByUsername(request.username()).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
     }
 }
