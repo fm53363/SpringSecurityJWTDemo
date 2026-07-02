@@ -34,6 +34,11 @@ public class SecurityConfig {
                         .requestMatchers("/h2-console/**").permitAll() // Allow access to console
 
                         .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers(
+                                "/swagger-ui/**",
+                                "/swagger-ui.html",
+                                "/v3/api-docs/**"
+                        ).permitAll()
                         .requestMatchers("/error").permitAll()   // ✅ IMPORTANT FIX
 
                         .anyRequest().authenticated()
