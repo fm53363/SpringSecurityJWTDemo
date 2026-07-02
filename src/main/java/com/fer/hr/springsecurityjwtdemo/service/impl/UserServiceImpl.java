@@ -8,6 +8,8 @@ import com.fer.hr.springsecurityjwtdemo.exception.UsernameTakenException;
 import com.fer.hr.springsecurityjwtdemo.repository.UserRepository;
 import com.fer.hr.springsecurityjwtdemo.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -23,8 +25,13 @@ public class UserServiceImpl implements UserService {
 
     private final AuthenticationManager authenticationManager;
 
+
+    private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
+
+
     @Override
     public User register(RegisterRequestDto request) {
+        logger.info("Register request for username={}", request.username());
         if (userRepository.existsByUsername(request.username())) {
             throw new UsernameTakenException();
         }
@@ -39,6 +46,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User login(LoginRequestDto request) {
+        logger.info("Login request for username={}", request.username());
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.username(), request.password())
         );

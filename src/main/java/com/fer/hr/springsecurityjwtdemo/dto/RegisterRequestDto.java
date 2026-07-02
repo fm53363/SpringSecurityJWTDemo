@@ -16,7 +16,7 @@ public record RegisterRequestDto(
 ) {
 
     @AssertTrue(message = "Passwords do not match")
-    public boolean isPasswordMatching() {
+    private boolean isPasswordMatching() {
         if (password == null || confirmPassword == null) {
             return false;
         }
