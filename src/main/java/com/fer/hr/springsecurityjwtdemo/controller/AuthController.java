@@ -1,8 +1,8 @@
 package com.fer.hr.springsecurityjwtdemo.controller;
 
 import com.fer.hr.springsecurityjwtdemo.auth.JwtService;
-import com.fer.hr.springsecurityjwtdemo.dto.LoginRequestDto;
-import com.fer.hr.springsecurityjwtdemo.dto.RegisterRequestDto;
+import com.fer.hr.springsecurityjwtdemo.dto.request.LoginRequestDto;
+import com.fer.hr.springsecurityjwtdemo.dto.request.RegisterRequestDto;
 import com.fer.hr.springsecurityjwtdemo.entity.User;
 import com.fer.hr.springsecurityjwtdemo.service.UserService;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

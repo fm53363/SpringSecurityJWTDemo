@@ -1,7 +1,5 @@
 package com.fer.hr.springsecurityjwtdemo.exception;
 
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.JwtException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -38,18 +36,6 @@ public class GlobalExceptionHandler {
                 .body(response);
     }
 
-    @ExceptionHandler(ExpiredJwtException.class)
-    public ResponseEntity<ErrorResponse> handleExpiredJwt(ExpiredJwtException e) {
-        ErrorResponse error = new ErrorResponse(HttpStatus.UNAUTHORIZED, "Token has expired");
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
-    }
-
-    @ExceptionHandler(JwtException.class)
-    public ResponseEntity<ErrorResponse> handleInvalidJwt(JwtException e) {
-        ErrorResponse error = new ErrorResponse(HttpStatus.UNAUTHORIZED, "Invalid token");
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
-    }
-
     // 409
     @ExceptionHandler(UsernameTakenException.class)
     public ResponseEntity<ErrorResponse> handleUsernameAlreadyExists(
@@ -64,7 +50,7 @@ public class GlobalExceptionHandler {
 
     // 500
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handleGeneric(Exception ex) {
+    public ResponseEntity<ErrorResponse> handleGeneric(Exception ex) throws Exception {
         var status = HttpStatus.INTERNAL_SERVER_ERROR;
         ErrorResponse response = new ErrorResponse(status, "Something went wrong", null);
 

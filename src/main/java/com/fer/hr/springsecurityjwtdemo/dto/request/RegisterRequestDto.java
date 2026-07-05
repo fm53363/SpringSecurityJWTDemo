@@ -1,4 +1,4 @@
-package com.fer.hr.springsecurityjwtdemo.dto;
+package com.fer.hr.springsecurityjwtdemo.dto.request;
 
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotBlank;
