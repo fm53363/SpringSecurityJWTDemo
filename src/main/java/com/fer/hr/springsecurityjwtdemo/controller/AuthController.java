@@ -6,7 +6,6 @@ import com.fer.hr.springsecurityjwtdemo.dto.request.RegisterRequestDto;
 import com.fer.hr.springsecurityjwtdemo.entity.User;
 import com.fer.hr.springsecurityjwtdemo.service.UserService;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -26,11 +25,9 @@ public class AuthController {
     private final UserService userService;
 
 
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "User registered"),
-            @ApiResponse(responseCode = "400", description = "Validation failed"),
-            @ApiResponse(responseCode = "401", description = "Wrong username or password")
-    })
+    @ApiResponse(responseCode = "200", description = "User registered")
+    @ApiResponse(responseCode = "400", description = "Validation failed")
+    @ApiResponse(responseCode = "401", description = "Wrong username or password")
     @PostMapping("/login")
     public ResponseEntity<Map<String, String>> login(@Valid @RequestBody LoginRequestDto request) {
         User user = userService.login(request);
@@ -39,11 +36,9 @@ public class AuthController {
     }
 
 
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "User registered"),
-            @ApiResponse(responseCode = "400", description = "Validation failed"),
-            @ApiResponse(responseCode = "409", description = "Username or email already exists")
-    })
+    @ApiResponse(responseCode = "200", description = "User registered")
+    @ApiResponse(responseCode = "400", description = "Validation failed")
+    @ApiResponse(responseCode = "409", description = "Username or email already exists")
     @PostMapping("/register")
     public ResponseEntity<Map<String, String>> register(@Valid @RequestBody RegisterRequestDto request) {
         User user = userService.register(request);
