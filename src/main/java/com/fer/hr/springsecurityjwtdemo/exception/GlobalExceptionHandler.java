@@ -3,6 +3,7 @@ package com.fer.hr.springsecurityjwtdemo.exception;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -36,6 +37,29 @@ public class GlobalExceptionHandler {
                 .body(response);
     }
 
+    //403
+    @ExceptionHandler(AuthorizationDeniedException.class)
+    public ResponseEntity<ErrorResponse> handleBadCredentials(AuthorizationDeniedException ex) {
+        // this catches AuthorizationDeniedException in PreAuthorize
+        // AuthExceptionHandler implements AccessDeniedHandler catches exception in filter level
+        //          example: in SecurityConfig: .requestMatchers("/api/admin/**").hasRole("ADMIN")
+        var status = HttpStatus.FORBIDDEN;
+        ErrorResponse response = new ErrorResponse(status, "unauthorized");
+        return ResponseEntity
+                .status(status)
+                .body(response);
+    }
+
+    //404
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleBadCredentials(UserNotFoundException ex) {
+        var status = HttpStatus.NOT_FOUND;
+        ErrorResponse response = new ErrorResponse(status, "User not found");
+        return ResponseEntity
+                .status(status)
+                .body(response);
+    }
+
     // 409
     @ExceptionHandler(UsernameTakenException.class)
     public ResponseEntity<ErrorResponse> handleUsernameAlreadyExists(
@@ -50,7 +74,7 @@ public class GlobalExceptionHandler {
 
     // 500
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handleGeneric(Exception ex) throws Exception {
+    public ResponseEntity<ErrorResponse> handleGeneric(Exception ex) {
         var status = HttpStatus.INTERNAL_SERVER_ERROR;
         ErrorResponse response = new ErrorResponse(status, "Something went wrong", null);
 
