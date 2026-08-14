@@ -94,6 +94,9 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(id).orElseThrow(UserNotFoundException::new);
 
         if (request.username() != null) {
+            if (userRepository.existsByUsername(request.username())) {
+                throw new UsernameTakenException();
+            }
             user.setUsername(request.username());
         }
         if (request.password() != null) {
@@ -103,6 +106,12 @@ public class UserServiceImpl implements UserService {
             user.setRole(request.role());
         }
         return userMapper.toDto(user);
+    }
+
+    @Override
+    public void deleteUser(long id) {
+        userRepository.findById(id).orElseThrow(UserNotFoundException::new);
+        userRepository.deleteById(id);
     }
 
 }

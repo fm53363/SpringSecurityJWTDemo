@@ -35,6 +35,7 @@ public class UserController {
         return ResponseEntity.ok(users);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<UserResponseDto> createUser(@RequestBody CreateUserRequestDto dto) {
         UserResponseDto savedUser = userService.createUser(dto);
@@ -42,7 +43,7 @@ public class UserController {
         return ResponseEntity.created(location).body(savedUser);
     }
 
-    @PreAuthorize("hasRole('ADMIN') or #id == authentication.principal.id")
+    @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping("/{id}")
     public ResponseEntity<UserResponseDto> updateUser(@RequestBody UpdateUserRequestDto dto, @PathVariable("id") long id) {
         var response = userService.updateUser(id, dto);
@@ -51,8 +52,8 @@ public class UserController {
 
     @PreAuthorize("hasRole('ADMIN') or #id == authentication.principal.id")
     @DeleteMapping("/{id}")
-    public ResponseEntity<UserResponseDto> deleteUser(@PathVariable("id") long id) {
-        var user = userService.getById(id);
-        return ResponseEntity.ok(user);
+    public ResponseEntity<Void> deleteUser(@PathVariable("id") long id) {
+        userService.deleteUser(id);
+        return ResponseEntity.noContent().build();
     }
 }
